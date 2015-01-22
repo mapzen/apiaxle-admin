@@ -45,6 +45,12 @@ angular.module('apiaxleAdminApp')
   }])
   .controller('ApiCreateCtrl', ['$scope', '$routeParams', '$location',  'ApiAxle',
     function($scope, $routeParams, $location, ApiAxle) {
+      $scope.api = {
+        endPointTimeout: 3,
+        allowKeylessUse: true,
+        keylessQps: 2,
+        keylessQpd: 172800
+      }
       $scope.createNewApi = function() {
         console.log($scope.api);
         delete $scope.api.id;
