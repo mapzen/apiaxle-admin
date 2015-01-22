@@ -33,6 +33,10 @@ angular
         templateUrl: 'views/apis.html',
         controller: 'ApisCtrl'
       })
+      .when('/apis/new', {
+        templateUrl: 'views/api-new.html',
+        controller: 'ApiCreateCtrl'
+      })
       .when('/apis/:id', {
         templateUrl: 'views/api-detail.html',
         controller: 'ApiCtrl'
