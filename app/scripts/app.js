@@ -31,7 +31,11 @@ angular
       })
       .when('/apis', {
         templateUrl: 'views/apis.html',
-        controller: 'ApicontrollerCtrl'
+        controller: 'ApisCtrl'
+      })
+      .when('/apis/:id', {
+        templateUrl: 'views/api-detail.html',
+        controller: 'ApiCtrl'
       })
       .otherwise({
         redirectTo: '/'

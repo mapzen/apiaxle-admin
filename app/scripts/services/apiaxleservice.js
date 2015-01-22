@@ -9,9 +9,14 @@
  */
 
 angular.module('apiaxleAdminApp')
-  .factory('ApiAxle', function($resource) {
+  .factory('ApiAxleList', function($resource) {
     return $resource('http://localhost/v1/apis', {}, {
     })
-  }).service('apiaxleService', function () {
+  })
+  .factory('ApiAxle', function($resource) {
+    return $resource('http://localhost/v1/api/:id', {}, {
+    })
+  })
+  .service('apiaxleService', function () {
     // AngularJS will instantiate a singleton by calling "new" on this function
   });

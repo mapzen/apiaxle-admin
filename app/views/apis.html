@@ -1,5 +1,7 @@
 <p>List of apis</p>
 
 <ul ng-repeat="api in apis">
-  <li>{{ api }}</li>
+  <li>{{ api }}
+    <a ng-click="editApi(api)" class="btn btn-small btn-primary">edit</a>
+  </li>
 </ul>
