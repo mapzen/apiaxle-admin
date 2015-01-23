@@ -22,10 +22,6 @@ angular
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .when('/apis', {
         templateUrl: 'views/apis.html',
         controller: 'ApisCtrl'
       })
@@ -33,12 +29,12 @@ angular
         templateUrl: 'views/api-new.html',
         controller: 'ApiCreateCtrl'
       })
-      .when('/apis/:endpoint', {
+      .when('/apis/:tag', {
         templateUrl: 'views/api-detail.html',
         controller: 'ApiCtrl'
       })
-      .when('/apis/:endpoint/edit', {
-        templateUrl: 'views/api-new.html',
+      .when('/apis/:tag/edit', {
+        templateUrl: 'views/api-edit.html',
         controller: 'ApiEditCtrl'
       })
       .otherwise({
