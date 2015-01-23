@@ -33,9 +33,13 @@ angular
         templateUrl: 'views/api-new.html',
         controller: 'ApiCreateCtrl'
       })
-      .when('/apis/:id', {
+      .when('/apis/:endpoint', {
         templateUrl: 'views/api-detail.html',
         controller: 'ApiCtrl'
+      })
+      .when('/apis/:endpoint/edit', {
+        templateUrl: 'views/api-new.html',
+        controller: 'ApiEditCtrl'
       })
       .otherwise({
         redirectTo: '/'

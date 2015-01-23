@@ -15,7 +15,8 @@ angular.module('apiaxleAdminApp')
   })
   .factory('ApiAxle', function($resource) {
     return $resource('http://localhost/v1/api/:endpoint', {endpoint: '@endPoint'}, {
-      create: { method: 'POST', headers: {'content-type': 'application/json'} }
+      create: { method: 'POST', headers: {'content-type': 'application/json'} },
+      update: { method: 'PUT', headers: {'content-type': 'application/json'} }
     })
   })
   .service('apiaxleService', function () {

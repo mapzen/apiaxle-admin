@@ -16,8 +16,7 @@ angular.module('apiaxleAdminApp')
       });
 
       $scope.deleteApi = function(api) {
-	      console.log('hello');
-	ApiAxle.delete({ id: api }, function() {
+	ApiAxle.delete({ endpoint: api }, function() {
           var api = ApiAxleList.get({}, function() {
             $scope.apis = api.results;
           });
@@ -25,22 +24,31 @@ angular.module('apiaxleAdminApp')
       };
 
       $scope.editApi = function(api) {
-        $location.path('/apis/' + api);
+        $location.path('/apis/' + api + "/edit");
       };
 
       $scope.createNewApi = function() {
         $location.path('/apis/new');
       };
   }])
+  .controller('ApiEditCtrl', ['$scope', '$routeParams', '$location', 'ApiAxle',
+    function($scope, $routeParams, $location, ApiAxle) {
+      var api = ApiAxle.get({ endpoint: $routeParams.endpoint}, function() {
+	$scope.api = api.results;
+      });
+      $scope.saveApi = function() {
+        ApiAxle.update($scope.api);
+	$location.path('/apis/' + $scope.api.endPoint);
+      }
+  }])
   .controller('ApiCtrl', ['$scope', '$routeParams', '$location', 'ApiAxle',
     function($scope, $routeParams, $location, ApiAxle) {
-      var api = ApiAxle.get({ id: $routeParams.id}, function() {
+      var api = ApiAxle.get({ endpoint: $routeParams.endpoint}, function() {
 	$scope.api = api.results;
 	$scope.name = $routeParams.id;
       });
       $scope.editApi = function(api) {
-	$location.path('/apis/' + api);
-        console.log(api);
+	$location.path('/apis/' + api + '/edit');
       };
   }])
   .controller('ApiCreateCtrl', ['$scope', '$routeParams', '$location',  'ApiAxle',
@@ -51,9 +59,7 @@ angular.module('apiaxleAdminApp')
         keylessQps: 2,
         keylessQpd: 172800
       }
-      $scope.createNewApi = function() {
-        console.log($scope.api);
-        delete $scope.api.id;
+      $scope.saveApi = function() {
         ApiAxle.create($scope.api);
       }
   }]);
