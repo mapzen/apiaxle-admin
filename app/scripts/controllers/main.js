@@ -8,10 +8,9 @@
  * Controller of the apiaxleAdminApp
  */
 angular.module('apiaxleAdminApp')
-  .controller('MainCtrl', function ($scope) {
-    $scope.awesomeThings = [
-      'HTML5 Boilerplate',
-      'AngularJS',
-      'Karma'
-    ];
-  });
+  .controller('MainCtrl', ['$scope', 'ApiAxleInfo', function ($scope, ApiAxleInfo) {
+    var api = ApiAxleInfo.get({}, function() {
+      $scope.info = api.results;
+      console.log($scope.info);
+    });
+  }]);

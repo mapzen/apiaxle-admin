@@ -41,11 +41,14 @@ angular.module('apiaxleAdminApp')
 	$location.path('/apis/' + $scope.api.endPoint);
       }
   }])
-  .controller('ApiCtrl', ['$scope', '$routeParams', '$location', 'ApiAxle',
-    function($scope, $routeParams, $location, ApiAxle) {
+  .controller('ApiCtrl', ['$scope', '$routeParams', '$location', 'ApiAxle', 'ApiAxleStats',
+    function($scope, $routeParams, $location, ApiAxle, ApiAxleStats) {
       var api = ApiAxle.get({ endpoint: $routeParams.endpoint}, function() {
 	$scope.api = api.results;
-	$scope.name = $routeParams.id;
+      });
+      var apiStats = ApiAxleStats.get({ endpoint: $routeParams.endpoint}, function() {
+        $scope.stats = apiStats.results;
+      console.log($scope.stats);
       });
       $scope.editApi = function(api) {
 	$location.path('/apis/' + api + '/edit');
