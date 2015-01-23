@@ -24,7 +24,7 @@ angular.module('apiaxleAdminApp')
     })
   })
   .factory('ApiAxleStats', function($resource) {
-    return $resource('http://localhost/v1/api/:endpoint/stats', {}, {
+    return $resource('http://localhost/v1/api/:tag/stats', {}, {
     })
   })
   .service('apiaxleService', function () {

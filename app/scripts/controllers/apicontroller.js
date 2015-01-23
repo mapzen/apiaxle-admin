@@ -52,8 +52,9 @@ angular.module('apiaxleAdminApp')
       var api = ApiAxle.get({ tag: $routeParams.tag}, function() {
 	$scope.api = api.results;
       });
-      var apiStats = ApiAxleStats.get({ endpoint: $routeParams.endpoint}, function() {
+      var apiStats = ApiAxleStats.get({ tag: $routeParams.tag}, function() {
         $scope.stats = apiStats.results;
+        console.log($scope.stats);
       });
       $scope.editApi = function(api) {
 	$location.path('/apis/' + api + '/edit');
