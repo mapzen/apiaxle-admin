@@ -53,7 +53,6 @@ angular.module('apiaxleAdminApp')
         $scope.api = api.results;
       });
       var getDataForGraph = function(rawData, interval) {
-          console.log(rawData);
           var date = new Date();
           if(interval === "hourly") {
             date.setMinutes(0);
@@ -62,26 +61,26 @@ angular.module('apiaxleAdminApp')
           var timestamp = parseInt(date.getTime() / 1000);
 
           var axis = []
-          var stats = { 200: [], 304: [] };
 
           var timeRange = 2*60;
           if (interval === "hourly") {
             timeRange = 2*24;
           }
+          var stats = {};
           for(var i = timeRange; i--; i > 0) {
             axis.push(timestamp);
-            var number200 = rawData.results.uncached['200'][timestamp];
-            var number304 = rawData.results.uncached['304'][timestamp];
-            if(number200) {
-              stats['200'].push(number200);
-            } else {
-              stats['200'].push(0);
-            }
-            if(number304) {
-              stats['304'].push(number304);
-            } else {
-              stats['304'].push(0);
-            }
+            angular.forEach(rawData, function(value, key) {
+              angular.forEach(value, function(v,k){
+                if(!angular.isArray(stats[k])) {
+                  stats[k] = []
+                }
+                if(v[timestamp]) {
+                  stats[k].push(v[timestamp])
+                } else {
+                  stats[k].push(0)
+                }
+              });
+            });
             if (interval === "hourly") {
               timestamp = timestamp - 60 * 60;
             } else if (interval === "minutely") {
@@ -90,19 +89,20 @@ angular.module('apiaxleAdminApp')
           }
           axis.push('x');
           axis.reverse();
-          stats['200'].push("200");
-          stats['200'].reverse()
-          stats['304'].push("304");
-          stats['304'].reverse()
-
-        return [axis, stats['200'], stats['304']];
+          var displayData = [axis];
+          angular.forEach(stats, function(value, k) {
+            value.push(k);
+            value.reverse();
+            displayData.push(value);
+          });
+        return displayData;
       }
       var generateChartForDiv = function(div, data) {
         var chart = c3.generate({
             bindto: '#' + div,
             data: {
               x: 'x',
-              columns: getDataForGraph(data, div),
+              columns: getDataForGraph(data.results, div),
             },
             axis : {
               x : {
@@ -130,10 +130,6 @@ angular.module('apiaxleAdminApp')
           generateChartForDiv("minutely", apiMinuteStats);
         }
       );
-      $scope.$watch('hello', function (value) {
-        console.log($scope.stats);
-      });
-
       $scope.editApi = function(api) {
         $location.path('/apis/' + api + '/edit');
       };
