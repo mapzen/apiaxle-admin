@@ -1,4 +1,11 @@
 <h2>API: {{ name }}</h2>
+
+<h3>Last 2 Hours</h3>
+<div id="chart_minutes"></div>
+
+<h3>Last 2 Days</h3>
+<div id="chart_days"></div>
+
 <ul>
   <li>Allow Keyless User: {{ api.allowKeylessUse }}</li>
   <li>Api Format: {{ api.apiFormat }}</li>
@@ -15,13 +22,6 @@
   <li>Send through Api sig: {{ api.sendThroughApiSig }}</li>
   <li>Strct SSL: {{ api.strictSSL }}</li>
   <li>Token Skew Protection Count: {{ api.tokenSkewProtectionCount }}</li>
-</ul>
-
-<h3>Stats Last 10 minutes</h3>
-<ul>
-  <li>cached: {{ stats.cached }}</li>
-  <li>uncached: {{ stats.uncached }}</li>
-  <li>error: {{ stats.error }}</li>
 </ul>
 
 <ul>

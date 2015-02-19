@@ -23,9 +23,27 @@ angular.module('apiaxleAdminApp')
     return $resource('http://localhost/v1/info', {}, {
     })
   })
-  .factory('ApiAxleStats', function($resource) {
-    return $resource('http://localhost/v1/api/:tag/stats', {}, {
-    })
+  .factory('ApiAxleMinuteStats', function($resource) {
+    var date = new Date();
+    date.setDate(date.getDate() - 1);
+    var timestamp = parseInt(date.getTime()/1000, 10);
+
+    return $resource('http://localhost/v1/api/:tag/stats', {
+        from: timestamp,
+        granularity: 'minute',
+        format_timeseries: 'true'
+      }, {})
+  })
+  .factory('ApiAxleHourStats', function($resource) {
+    var date = new Date();
+    date.setDate(date.getDate() - 2);
+    var timestamp = parseInt(date.getTime()/1000, 10);
+
+    return $resource('http://localhost/v1/api/:tag/stats', {
+        from: timestamp,
+        granularity: 'hour',
+        format_timeseries: 'true'
+      }, {})
   })
   .service('apiaxleService', function () {
     // AngularJS will instantiate a singleton by calling "new" on this function
