@@ -10,17 +10,17 @@
 
 angular.module('apiaxleAdminApp')
   .factory('ApiAxleList', function($resource) {
-    return $resource('http://localhost/v1/apis', {}, {
+    return $resource('/v1/apis', {}, {
     })
   })
   .factory('ApiAxle', function($resource) {
-    return $resource('http://localhost/v1/api/:tag', {tag: '@tag'}, {
+    return $resource('/v1/api/:tag', {tag: '@tag'}, {
       create: { method: 'POST', headers: {'content-type': 'application/json'} },
       update: { method: 'PUT', headers: {'content-type': 'application/json'} }
     })
   })
   .factory('ApiAxleInfo', function($resource) {
-    return $resource('http://localhost/v1/info', {}, {
+    return $resource('/v1/info', {}, {
     })
   })
   .factory('ApiAxleMinuteStats', function($resource) {
@@ -28,7 +28,7 @@ angular.module('apiaxleAdminApp')
     date.setDate(date.getDate() - 1);
     var timestamp = parseInt(date.getTime()/1000, 10);
 
-    return $resource('http://localhost/v1/api/:tag/stats', {
+    return $resource('/v1/api/:tag/stats', {
         from: timestamp,
         granularity: 'minute',
         format_timeseries: 'true'
@@ -39,7 +39,7 @@ angular.module('apiaxleAdminApp')
     date.setDate(date.getDate() - 2);
     var timestamp = parseInt(date.getTime()/1000, 10);
 
-    return $resource('http://localhost/v1/api/:tag/stats', {
+    return $resource('/v1/api/:tag/stats', {
         from: timestamp,
         granularity: 'hour',
         format_timeseries: 'true'
