@@ -52,20 +52,26 @@ angular.module('apiaxleAdminApp')
       var api = ApiAxle.get({ tag: $routeParams.tag}, function() {
         $scope.api = api.results;
       });
-      var apiHourStats = ApiAxleHourStats.get({tag: $routeParams.tag},
-        function() {
-          console.log(apiHourStats);
+      var getDataForGraph = function(rawData, interval) {
+          console.log(rawData);
           var date = new Date();
-          date.setMinutes(0);
+          if(interval === "hourly") {
+            date.setMinutes(0);
+          }
           date.setSeconds(0);
           var timestamp = parseInt(date.getTime() / 1000);
 
           var axis = []
           var stats = { 200: [], 304: [] };
-          for(var i = 2 * 24; i--; i > 0) {
+
+          var timeRange = 2*60;
+          if (interval === "hourly") {
+            timeRange = 2*24;
+          }
+          for(var i = timeRange; i--; i > 0) {
             axis.push(timestamp);
-            var number200 = apiHourStats.results.uncached['200'][timestamp];
-            var number304 = apiHourStats.results.uncached['304'][timestamp];
+            var number200 = rawData.results.uncached['200'][timestamp];
+            var number304 = rawData.results.uncached['304'][timestamp];
             if(number200) {
               stats['200'].push(number200);
             } else {
@@ -76,7 +82,11 @@ angular.module('apiaxleAdminApp')
             } else {
               stats['304'].push(0);
             }
-            timestamp = timestamp - 60 * 60;
+            if (interval === "hourly") {
+              timestamp = timestamp - 60 * 60;
+            } else if (interval === "minutely") {
+              timestamp = timestamp - 60;
+            }
           }
           axis.push('x');
           axis.reverse();
@@ -85,90 +95,41 @@ angular.module('apiaxleAdminApp')
           stats['304'].push("304");
           stats['304'].reverse()
 
-          var chart = c3.generate({
-              bindto: '#chart_days',
-              data: {
-                x: 'x',
-                columns: [
-                  axis,
-                  stats['200'],
-                  stats['304']
-                ],
-              },
-              axis : {
-                x : {
-                  type : 'timeseries',
-                  tick: {
-                    format: function (x) {
-                      var date = new Date(x * 1000);
-                      var str = "" + date.getMinutes();
-                      var pad = "00"
-                      var minutes = pad.substring(0, pad.length - str.length) + str
-                      return date.getHours() + ":" + minutes;
-                    }
+        return [axis, stats['200'], stats['304']];
+      }
+      var generateChartForDiv = function(div, data) {
+        var chart = c3.generate({
+            bindto: '#' + div,
+            data: {
+              x: 'x',
+              columns: getDataForGraph(data, div),
+            },
+            axis : {
+              x : {
+                type : 'timeseries',
+                tick: {
+                  format: function (x) {
+                    var date = new Date(x * 1000);
+                    var str = "" + date.getMinutes();
+                    var pad = "00"
+                    var minutes = pad.substring(0, pad.length - str.length) + str
+                    return date.getHours() + ":" + minutes;
                   }
                 }
               }
-          });
+            }
+        });
+      };
+      var apiHourStats = ApiAxleHourStats.get({tag: $routeParams.tag},
+        function() {
+          generateChartForDiv("hourly", apiHourStats);
         }
       );
       var apiMinuteStats = ApiAxleMinuteStats.get({ tag: $routeParams.tag},
         function() {
-          var date = new Date();
-          date.setSeconds(0);
-          var timestamp = parseInt(date.getTime() / 1000);
-
-          $scope.axis = []
-          $scope.stats = { 200: [], 304: [] };
-          for(var i = 2 * 60; i--; i > 0) {
-            $scope.axis.push(timestamp);
-            var number200 = apiMinuteStats.results.uncached['200'][timestamp];
-            var number304 = apiMinuteStats.results.uncached['304'][timestamp];
-            if(number200) {
-              $scope.stats['200'].push(number200);
-            } else {
-              $scope.stats['200'].push(0);
-            }
-            if(number304) {
-              $scope.stats['304'].push(number304);
-            } else {
-              $scope.stats['304'].push(0);
-            }
-            timestamp = timestamp - 60;
-          }
-          $scope.axis.push('x');
-          $scope.axis.reverse();
-          $scope.stats['200'].push("200");
-          $scope.stats['200'].reverse()
-          $scope.stats['304'].push("304");
-          $scope.stats['304'].reverse()
-
-          var chart = c3.generate({
-              bindto: '#chart_minutes',
-              data: {
-                x: 'x',
-                columns: [
-                  $scope.axis,
-                  $scope.stats['200'],
-                  $scope.stats['304']
-                ]
-              },
-              axis : {
-                x : {
-                  type : 'timeseries',
-                  tick: {
-                    format: function (x) {
-                      var date = new Date(x * 1000);
-                      var str = "" + date.getMinutes();
-                      var pad = "00"
-                      var minutes = pad.substring(0, pad.length - str.length) + str
-                      return date.getHours() + ":" + minutes;
-                    }
-                  }
-                }
-              }
-          });
-      });
+          generateChartForDiv("minutely", apiMinuteStats);
+        }
+      );
       $scope.$watch('hello', function (value) {
         console.log($scope.stats);
       });
